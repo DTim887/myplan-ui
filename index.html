@@ -1,0 +1,122 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>智能助手</title>
+    <link rel="stylesheet" href="style.css">
+    <!-- 引入marked.js用于markdown解析 -->
+    <script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
+    <!-- 引入用户管理js -->
+    <script src="user.js"></script>
+    <!-- 引入配置文件 -->
+    <script src="config.js"></script>
+</head>
+
+<body>
+    <div class="main-container">
+        <!-- 左侧用户信息栏 -->
+        <div class="left-panel">
+            <div class="user-profile">
+                <div class="switch-user-container">
+                    <button id="switchUserBtn" class="switch-user-btn">切换用户</button>
+                </div>
+                <div class="user-info">
+                    <div class="user-avatar">
+                        <img id="userAvatar" src="https://via.placeholder.com/60x60/4e6ef2/ffffff?text=U" alt="用户头像">
+                    </div>
+                    <div class="user-details">
+                        <div class="user-name" id="userName">访客用户</div>
+                        <div class="user-sex" id="userSex"></div>
+                        <div class="user-tags" id="userTags">
+                            <!-- 用户标签将通过JavaScript动态生成 -->
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- 切换用户模态框 -->
+            <div id="switchUserModal" class="modal">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h3>切换用户</h3>
+                        <span class="close">&times;</span>
+                    </div>
+                    <div class="modal-body">
+                        <div class="user-list" id="userList">
+                            <!-- 用户列表将通过JavaScript动态生成 -->
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- 确认模态框 -->
+            <div id="confirmModal" class="modal">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h3>确认切换</h3>
+                    </div>
+                    <div class="modal-body">
+                        <p>确定要切换到用户 <span id="confirmUserName"></span> 吗？</p>
+                    </div>
+                    <div class="modal-footer">
+                        <button id="confirmCancelBtn" class="btn-secondary">取消</button>
+                        <button id="confirmSwitchBtn" class="btn-primary">确认</button>
+                    </div>
+                </div>
+            </div>
+
+            <div class="user-orders">
+                <h3>我的订单</h3>
+                <ul class="order-list">
+                    <li class="order-item">
+                        <div class="order-title">产品A</div>
+                        <div class="order-status">已完成</div>
+                    </li>
+                    <li class="order-item">
+                        <div class="order-title">产品B</div>
+                        <div class="order-status">处理中</div>
+                    </li>
+                    <li class="order-item">
+                        <div class="order-title">产品C</div>
+                        <div class="order-status">待付款</div>
+                    </li>
+                </ul>
+            </div>
+
+            <div class="user-links">
+                <h3>快速链接</h3>
+                <ul class="links-list">
+                    <li><a href="attractions.html" target="browser-frame">景点列表</a></li>
+                </ul>
+            </div>
+        </div>
+
+        <!-- 中间聊天窗口 -->
+        <div class="center-panel">
+            <div class="chat-container">
+                <div class="chat-messages" id="chatMessages">
+                    <!-- 消息将在这里显示 -->
+                </div>
+                <div class="chat-input-container">
+                    <textarea id="messageInput" placeholder="输入消息..." rows="3"></textarea>
+                    <button id="sendButton">发送</button>
+                </div>
+            </div>
+        </div>
+
+        <!-- 右侧浏览器 -->
+        <div class="right-panel">
+            <div class="browser-header">
+                <h3>内置浏览器</h3>
+            </div>
+            <iframe src="about:blank" name="browser-frame" class="browser-frame" frameborder="0">
+            </iframe>
+        </div>
+    </div>
+
+    <script src="script.js"></script>
+</body>
+
+</html>

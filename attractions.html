@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>景点列表</title>
+    <link rel="stylesheet" href="attractions.css">
+</head>
+<body>
+    <div class="container">
+        <header class="page-header">
+            <h1>热门景点</h1>
+        </header>
+        
+        <div class="search-bar">
+            <input type="text" id="searchInput" placeholder="搜索景点...">
+            <button id="searchButton">搜索</button>
+        </div>
+        
+        <div class="filters">
+            <button class="filter-btn active" data-filter="all">全部</button>
+            <button class="filter-btn" data-filter="nature">自然</button>
+            <button class="filter-btn" data-filter="culture">文化</button>
+            <button class="filter-btn" data-filter="history">历史</button>
+            <button class="filter-btn" data-filter="entertainment">娱乐</button>
+        </div>
+        
+        <div class="attractions-grid" id="attractionsGrid">
+            <!-- 景点卡片将通过JavaScript动态生成 -->
+        </div>
+    </div>
+    
+    <script src="attractions.js"></script>
+</body>
+</html>
