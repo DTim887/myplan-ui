@@ -213,6 +213,8 @@ class UserManager {
             await this.fetchCurrentUser();
             this.updateUserInfo();
 
+
+
             // 清空聊天记录
             this.clearChatHistory();
 
@@ -222,9 +224,10 @@ class UserManager {
             // 显示切换成功提示
             alert(`已切换到用户: ${this.currentUser.name}`);
         } catch (error) {
-            console.error('切换用户失败:', error);
-            alert('切换用户失败，请稍后再试');
+            console.error("切换用户失败:", error);
+            alert("切换用户失败，请稍后再试");
         }
+
     }
 
     // 关闭所有模态框
