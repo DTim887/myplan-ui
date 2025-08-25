@@ -4,6 +4,8 @@ class UserManager {
         this.currentUser = null;
         this.userList = [];
         this.selectedUserForSwitch = null;
+        this.chatMessages = document.getElementById('chatMessages');
+        this.chatApp = null;
         this.init();
         this.initEventListeners();
     }
@@ -211,6 +213,12 @@ class UserManager {
             await this.fetchCurrentUser();
             this.updateUserInfo();
 
+            // 清空聊天记录
+            this.clearChatHistory();
+
+            // 自动发送"你好！"消息
+            this.sendWelcomeMessage();
+
             // 显示切换成功提示
             alert(`已切换到用户: ${this.currentUser.name}`);
         } catch (error) {
@@ -225,6 +233,26 @@ class UserManager {
         modals.forEach(modal => {
             modal.style.display = 'none';
         });
+    }
+
+    // 设置 ChatApp 实例的引用
+    setChatApp(chatApp) {
+        this.chatApp = chatApp;
+    }
+
+    // 发送欢迎消息
+    sendWelcomeMessage() {
+        if (this.chatApp) {
+            // 使用静默方式发送"你好！"消息
+            this.chatApp.sendSilentMessage("你好！");
+        }
+    }
+
+    // 清空聊天记录
+    clearChatHistory() {
+        if (this.chatMessages) {
+            this.chatMessages.innerHTML = '';
+        }
     }
 
     // 更新用户信息显示

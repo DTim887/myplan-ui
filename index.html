@@ -117,6 +117,15 @@
     </div>
 
     <script src="script.js"></script>
+    <script>
+        // 在 ChatApp 初始化后设置 UserManager 和 ChatApp 之间的引用
+        document.addEventListener('DOMContentLoaded', () => {
+            // 确保两个对象都已初始化
+            if (typeof window.userManager !== 'undefined' && typeof window.chatApp !== 'undefined') {
+                window.userManager.setChatApp(window.chatApp);
+            }
+        });
+    </script>
 </body>
 
 </html>

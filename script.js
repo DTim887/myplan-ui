@@ -5,12 +5,37 @@ class ChatApp {
         this.sendButton = document.getElementById('sendButton');
 
         this.initEventListeners();
-        this.displayWelcomeMessage();
+        // 页面初始化时自动发送欢迎消息
+        this.sendWelcomeMessageOnLoad();
     }
 
     displayWelcomeMessage() {
         const welcomeMessage = "你好！欢迎使用智能助手。请输入您的问题，我将尽力为您解答。";
         this.displayMessage(welcomeMessage, 'system');
+    }
+
+    // 页面加载时发送欢迎消息
+    sendWelcomeMessageOnLoad() {
+        // 确保 DOM 已完全加载
+        setTimeout(() => {
+            this.sendSilentMessage("你好！");
+        }, 100);
+    }
+
+    // 静默发送消息，不显示在聊天窗口中
+    sendSilentMessage(message) {
+        // 清空输入框
+        this.messageInput.value = '';
+
+        // 禁用发送按钮和输入框
+        this.sendButton.disabled = true;
+        this.messageInput.disabled = true;
+
+        // 显示正在输入指示器
+        this.showTypingIndicator();
+
+        // 调用后端API
+        this.callAPI(message);
     }
 
     initEventListeners() {
@@ -167,5 +192,5 @@ class ChatApp {
 
 // 初始化聊天应用
 document.addEventListener('DOMContentLoaded', () => {
-    new ChatApp();
+    window.chatApp = new ChatApp();
 });
