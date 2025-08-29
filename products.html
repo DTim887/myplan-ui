@@ -14,19 +14,19 @@
             color: #e0e0ff;
             min-height: 100vh;
         }
-        
+
         .product-container {
             max-width: 1200px;
             margin: 0 auto;
             padding: 20px;
         }
-        
+
         .product-header {
             text-align: center;
             margin-bottom: 40px;
             position: relative;
         }
-        
+
         .product-header h2 {
             font-size: 2.5rem;
             margin: 0;
@@ -38,7 +38,7 @@
             position: relative;
             display: inline-block;
         }
-        
+
         .product-header h2::after {
             content: '';
             position: absolute;
@@ -50,13 +50,13 @@
             background: linear-gradient(90deg, #00dbde, #fc00ff);
             border-radius: 3px;
         }
-        
+
         .product-list {
             display: grid;
             grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
             gap: 30px;
         }
-        
+
         .product-item {
             background: rgba(30, 30, 60, 0.7);
             border-radius: 15px;
@@ -68,7 +68,7 @@
             border: 1px solid rgba(100, 100, 255, 0.2);
             box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
         }
-        
+
         .product-item::before {
             content: '';
             position: absolute;
@@ -82,24 +82,26 @@
             animation: borderAnimation 3s linear infinite;
             background-size: 300% 300%;
         }
-        
+
         @keyframes borderAnimation {
             0% {
                 background-position: 0 50%;
             }
+
             50% {
                 background-position: 100% 50%;
             }
+
             100% {
                 background-position: 0 50%;
             }
         }
-        
+
         .product-item:hover {
             transform: translateY(-10px) scale(1.02);
             box-shadow: 0 15px 35px rgba(102, 51, 255, 0.4);
         }
-        
+
         .product-image {
             width: 100%;
             height: 180px;
@@ -116,7 +118,7 @@
             overflow: hidden;
             box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3);
         }
-        
+
         .product-image::before {
             content: '';
             position: absolute;
@@ -124,20 +126,21 @@
             left: -50%;
             width: 200%;
             height: 200%;
-            background: linear-gradient(rgba(255,255,255,0.1) 50%, transparent 50%);
+            background: linear-gradient(rgba(255, 255, 255, 0.1) 50%, transparent 50%);
             transform: rotate(30deg);
             animation: shine 3s infinite;
         }
-        
+
         @keyframes shine {
             0% {
                 transform: rotate(30deg) translateX(-100%);
             }
+
             100% {
                 transform: rotate(30deg) translateX(100%);
             }
         }
-        
+
         .product-name {
             font-size: 1.4rem;
             font-weight: 600;
@@ -145,14 +148,14 @@
             color: #ffffff;
             text-shadow: 0 0 10px rgba(102, 51, 255, 0.5);
         }
-        
+
         .product-description {
             font-size: 0.95rem;
             color: #a0a0ff;
             margin-bottom: 15px;
             line-height: 1.6;
         }
-        
+
         .product-price {
             font-size: 1.8rem;
             font-weight: 700;
@@ -162,7 +165,7 @@
             -webkit-text-fill-color: transparent;
             text-shadow: 0 0 15px rgba(102, 51, 255, 0.3);
         }
-        
+
         .product-category {
             display: inline-block;
             background: rgba(102, 51, 255, 0.2);
@@ -173,13 +176,13 @@
             margin-top: 10px;
             border: 1px solid rgba(102, 51, 255, 0.3);
         }
-        
+
         .product-item:hover .product-category {
             background: rgba(102, 51, 255, 0.4);
             transform: scale(1.05);
             transition: all 0.3s ease;
         }
-        
+
         /* 添加一些科技感的装饰元素 */
         .tech-grid {
             position: fixed;
@@ -187,14 +190,14 @@
             left: 0;
             width: 100%;
             height: 100%;
-            background-image: 
+            background-image:
                 linear-gradient(rgba(102, 51, 255, 0.05) 1px, transparent 1px),
                 linear-gradient(90deg, rgba(102, 51, 255, 0.05) 1px, transparent 1px);
             background-size: 30px 30px;
             z-index: -1;
             pointer-events: none;
         }
-        
+
         .tech-particles {
             position: fixed;
             top: 0;
@@ -204,7 +207,7 @@
             z-index: -2;
             pointer-events: none;
         }
-        
+
         .particle {
             position: absolute;
             width: 3px;
@@ -213,18 +216,21 @@
             border-radius: 50%;
             animation: float 15s infinite linear;
         }
-        
+
         @keyframes float {
             0% {
                 transform: translateY(0) translateX(0);
                 opacity: 0;
             }
+
             10% {
                 opacity: 1;
             }
+
             90% {
                 opacity: 1;
             }
+
             100% {
                 transform: translateY(-100vh) translateX(100px);
                 opacity: 0;
@@ -232,15 +238,16 @@
         }
     </style>
 </head>
+
 <body>
     <div class="tech-grid"></div>
     <div class="tech-particles" id="particles"></div>
-    
+
     <div class="product-container">
         <div class="product-header">
             <h2>未来科技产品</h2>
         </div>
-        
+
         <div class="product-list">
             <div class="product-item">
                 <div class="product-image">量子智能手表</div>
@@ -249,7 +256,7 @@
                 <div class="product-price">¥12,999</div>
                 <div class="product-category">量子设备</div>
             </div>
-            
+
             <div class="product-item">
                 <div class="product-image">神经链接耳机</div>
                 <div class="product-name">神经链接耳机</div>
@@ -257,7 +264,7 @@
                 <div class="product-price">¥8,888</div>
                 <div class="product-category">神经科技</div>
             </div>
-            
+
             <div class="product-item">
                 <div class="product-image">反重力背包</div>
                 <div class="product-name">反重力背包</div>
@@ -265,7 +272,7 @@
                 <div class="product-price">¥15,999</div>
                 <div class="product-category">反重力设备</div>
             </div>
-            
+
             <div class="product-item">
                 <div class="product-image">全息投影仪</div>
                 <div class="product-name">全息投影仪</div>
@@ -273,7 +280,7 @@
                 <div class="product-price">¥22,999</div>
                 <div class="product-category">显示技术</div>
             </div>
-            
+
             <div class="product-item">
                 <div class="product-image">纳米清洁机器人</div>
                 <div class="product-name">纳米清洁机器人</div>
@@ -281,7 +288,7 @@
                 <div class="product-price">¥6,999</div>
                 <div class="product-category">纳米科技</div>
             </div>
-            
+
             <div class="product-item">
                 <div class="product-image">时空传送门</div>
                 <div class="product-name">时空传送门</div>
@@ -294,14 +301,14 @@
 
     <script>
         // 创建科技感粒子效果
-        document.addEventListener('DOMContentLoaded', function() {
+        document.addEventListener('DOMContentLoaded', function () {
             const particlesContainer = document.getElementById('particles');
             const particleCount = 50;
-            
+
             for (let i = 0; i < particleCount; i++) {
                 const particle = document.createElement('div');
                 particle.classList.add('particle');
-                
+
                 // 随机位置和动画延迟
                 particle.style.left = Math.random() * 100 + 'vw';
                 particle.style.top = Math.random() * 100 + 'vh';
@@ -310,10 +317,11 @@
                 particle.style.width = (Math.random() * 3 + 1) + 'px';
                 particle.style.height = particle.style.width;
                 particle.style.opacity = Math.random() * 0.7 + 0.3;
-                
+
                 particlesContainer.appendChild(particle);
             }
         });
     </script>
 </body>
+
 </html>
