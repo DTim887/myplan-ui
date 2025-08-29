@@ -189,7 +189,7 @@ class ChatApp {
             this.showTypingIndicator();
 
             // 使用流式响应处理语音回复
-            const response = await fetch(`${CONFIG.API_BASE_URL}/voice-chat-stream`, {
+            const response = await fetch(`${CONFIG.API_BASE_URL}/voice-chat`, {
                 method: 'POST',
                 body: formData
             });

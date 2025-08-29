@@ -1,0 +1,319 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>产品列表</title>
+    <link rel="stylesheet" href="style.css">
+    <style>
+        body {
+            background: linear-gradient(135deg, #0f0c29, #302b63, #24243e);
+            margin: 0;
+            padding: 20px;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            color: #e0e0ff;
+            min-height: 100vh;
+        }
+        
+        .product-container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+        
+        .product-header {
+            text-align: center;
+            margin-bottom: 40px;
+            position: relative;
+        }
+        
+        .product-header h2 {
+            font-size: 2.5rem;
+            margin: 0;
+            background: linear-gradient(90deg, #00dbde, #fc00ff);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            text-shadow: 0 0 20px rgba(102, 51, 255, 0.3);
+            letter-spacing: 2px;
+            position: relative;
+            display: inline-block;
+        }
+        
+        .product-header h2::after {
+            content: '';
+            position: absolute;
+            bottom: -10px;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 100px;
+            height: 3px;
+            background: linear-gradient(90deg, #00dbde, #fc00ff);
+            border-radius: 3px;
+        }
+        
+        .product-list {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+            gap: 30px;
+        }
+        
+        .product-item {
+            background: rgba(30, 30, 60, 0.7);
+            border-radius: 15px;
+            padding: 25px;
+            transition: all 0.4s ease;
+            position: relative;
+            overflow: hidden;
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(100, 100, 255, 0.2);
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
+        }
+        
+        .product-item::before {
+            content: '';
+            position: absolute;
+            top: -2px;
+            left: -2px;
+            right: -2px;
+            bottom: -2px;
+            background: linear-gradient(45deg, #00dbde, #fc00ff, #00dbde, #fc00ff);
+            z-index: -1;
+            border-radius: 17px;
+            animation: borderAnimation 3s linear infinite;
+            background-size: 300% 300%;
+        }
+        
+        @keyframes borderAnimation {
+            0% {
+                background-position: 0 50%;
+            }
+            50% {
+                background-position: 100% 50%;
+            }
+            100% {
+                background-position: 0 50%;
+            }
+        }
+        
+        .product-item:hover {
+            transform: translateY(-10px) scale(1.02);
+            box-shadow: 0 15px 35px rgba(102, 51, 255, 0.4);
+        }
+        
+        .product-image {
+            width: 100%;
+            height: 180px;
+            background: linear-gradient(45deg, #6a11cb, #2575fc);
+            border-radius: 12px;
+            margin-bottom: 20px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-weight: bold;
+            font-size: 1.2rem;
+            position: relative;
+            overflow: hidden;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3);
+        }
+        
+        .product-image::before {
+            content: '';
+            position: absolute;
+            top: -50%;
+            left: -50%;
+            width: 200%;
+            height: 200%;
+            background: linear-gradient(rgba(255,255,255,0.1) 50%, transparent 50%);
+            transform: rotate(30deg);
+            animation: shine 3s infinite;
+        }
+        
+        @keyframes shine {
+            0% {
+                transform: rotate(30deg) translateX(-100%);
+            }
+            100% {
+                transform: rotate(30deg) translateX(100%);
+            }
+        }
+        
+        .product-name {
+            font-size: 1.4rem;
+            font-weight: 600;
+            margin-bottom: 12px;
+            color: #ffffff;
+            text-shadow: 0 0 10px rgba(102, 51, 255, 0.5);
+        }
+        
+        .product-description {
+            font-size: 0.95rem;
+            color: #a0a0ff;
+            margin-bottom: 15px;
+            line-height: 1.6;
+        }
+        
+        .product-price {
+            font-size: 1.8rem;
+            font-weight: 700;
+            margin-bottom: 15px;
+            background: linear-gradient(90deg, #00dbde, #fc00ff);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            text-shadow: 0 0 15px rgba(102, 51, 255, 0.3);
+        }
+        
+        .product-category {
+            display: inline-block;
+            background: rgba(102, 51, 255, 0.2);
+            color: #a0a0ff;
+            padding: 6px 15px;
+            border-radius: 20px;
+            font-size: 0.85rem;
+            margin-top: 10px;
+            border: 1px solid rgba(102, 51, 255, 0.3);
+        }
+        
+        .product-item:hover .product-category {
+            background: rgba(102, 51, 255, 0.4);
+            transform: scale(1.05);
+            transition: all 0.3s ease;
+        }
+        
+        /* 添加一些科技感的装饰元素 */
+        .tech-grid {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-image: 
+                linear-gradient(rgba(102, 51, 255, 0.05) 1px, transparent 1px),
+                linear-gradient(90deg, rgba(102, 51, 255, 0.05) 1px, transparent 1px);
+            background-size: 30px 30px;
+            z-index: -1;
+            pointer-events: none;
+        }
+        
+        .tech-particles {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: -2;
+            pointer-events: none;
+        }
+        
+        .particle {
+            position: absolute;
+            width: 3px;
+            height: 3px;
+            background: rgba(102, 51, 255, 0.7);
+            border-radius: 50%;
+            animation: float 15s infinite linear;
+        }
+        
+        @keyframes float {
+            0% {
+                transform: translateY(0) translateX(0);
+                opacity: 0;
+            }
+            10% {
+                opacity: 1;
+            }
+            90% {
+                opacity: 1;
+            }
+            100% {
+                transform: translateY(-100vh) translateX(100px);
+                opacity: 0;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="tech-grid"></div>
+    <div class="tech-particles" id="particles"></div>
+    
+    <div class="product-container">
+        <div class="product-header">
+            <h2>未来科技产品</h2>
+        </div>
+        
+        <div class="product-list">
+            <div class="product-item">
+                <div class="product-image">量子智能手表</div>
+                <div class="product-name">量子智能手表</div>
+                <div class="product-description">采用量子计算技术，具备生物识别、健康监测、全息投影等功能，支持脑波控制。</div>
+                <div class="product-price">¥12,999</div>
+                <div class="product-category">量子设备</div>
+            </div>
+            
+            <div class="product-item">
+                <div class="product-image">神经链接耳机</div>
+                <div class="product-name">神经链接耳机</div>
+                <div class="product-description">直接与神经系统连接，实现思维控制，提供沉浸式音频体验和脑机接口功能。</div>
+                <div class="product-price">¥8,888</div>
+                <div class="product-category">神经科技</div>
+            </div>
+            
+            <div class="product-item">
+                <div class="product-image">反重力背包</div>
+                <div class="product-name">反重力背包</div>
+                <div class="product-description">利用反重力技术，可承载重物并减轻负重感，具备悬浮和短距离飞行功能。</div>
+                <div class="product-price">¥15,999</div>
+                <div class="product-category">反重力设备</div>
+            </div>
+            
+            <div class="product-item">
+                <div class="product-image">全息投影仪</div>
+                <div class="product-name">全息投影仪</div>
+                <div class="product-description">360度全息显示技术，支持手势控制和空间交互，适用于会议和娱乐。</div>
+                <div class="product-price">¥22,999</div>
+                <div class="product-category">显示技术</div>
+            </div>
+            
+            <div class="product-item">
+                <div class="product-image">纳米清洁机器人</div>
+                <div class="product-name">纳米清洁机器人</div>
+                <div class="product-description">纳米级清洁技术，可进入微观层面进行精密清洁，支持AI自主导航。</div>
+                <div class="product-price">¥6,999</div>
+                <div class="product-category">纳米科技</div>
+            </div>
+            
+            <div class="product-item">
+                <div class="product-image">时空传送门</div>
+                <div class="product-name">时空传送门</div>
+                <div class="product-description">基于爱因斯坦-罗森桥理论，实现短距离瞬时传送，安全可靠且节能高效。</div>
+                <div class="product-price">¥999,999</div>
+                <div class="product-category">时空科技</div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // 创建科技感粒子效果
+        document.addEventListener('DOMContentLoaded', function() {
+            const particlesContainer = document.getElementById('particles');
+            const particleCount = 50;
+            
+            for (let i = 0; i < particleCount; i++) {
+                const particle = document.createElement('div');
+                particle.classList.add('particle');
+                
+                // 随机位置和动画延迟
+                particle.style.left = Math.random() * 100 + 'vw';
+                particle.style.top = Math.random() * 100 + 'vh';
+                particle.style.animationDelay = Math.random() * 15 + 's';
+                particle.style.animationDuration = (Math.random() * 10 + 10) + 's';
+                particle.style.width = (Math.random() * 3 + 1) + 'px';
+                particle.style.height = particle.style.width;
+                particle.style.opacity = Math.random() * 0.7 + 0.3;
+                
+                particlesContainer.appendChild(particle);
+            }
+        });
+    </script>
+</body>
+</html>
