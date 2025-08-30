@@ -4,6 +4,14 @@ class ChatApp {
         this.messageInput = document.getElementById('messageInput');
         this.sendButton = document.getElementById('sendButton');
         this.voiceButton = document.getElementById('voiceButton');
+        // 助手相关元素
+        this.assistantName = document.getElementById('assistantName');
+        this.assistantAvatar = document.getElementById('assistantAvatar');
+        this.assistantDescription = document.getElementById('assistantDescription');
+        this.switchAssistantBtn = document.getElementById('switchAssistantBtn');
+
+        // 当前助手信息
+        this.currentAssistant = null;
 
         // 语音相关属性
         this.mediaRecorder = null;
@@ -12,7 +20,9 @@ class ChatApp {
 
         this.initEventListeners();
         // 页面初始化时自动发送欢迎消息
-        this.sendWelcomeMessageOnLoad();
+        //this.sendWelcomeMessageOnLoad();
+        // 获取当前助手信息
+        this.getCurrentAssistant();
     }
 
     displayWelcomeMessage() {
@@ -62,6 +72,159 @@ class ChatApp {
         this.voiceButton.addEventListener('click', () => {
             this.toggleVoiceRecording();
         });
+
+        // 切换助手按钮点击事件
+        if (this.switchAssistantBtn) {
+            this.switchAssistantBtn.addEventListener('click', () => {
+                this.switchAssistant();
+            });
+        }
+    }
+
+    // 获取当前助手信息
+    async getCurrentAssistant() {
+        try {
+            const response = await fetch(`${CONFIG.API_BASE_URL}/assistant/current`);
+            if (!response.ok) {
+                throw new Error(`HTTP error! status: ${response.status}`);
+            }
+
+            const result = await response.json();
+            this.updateAssistantInfo(result.data);
+        } catch (error) {
+            console.error('获取当前助手信息失败:', error);
+            // 使用默认值
+            this.updateAssistantInfo({
+                assistantName: '智能助手',
+                avatar: 'https://via.placeholder.com/40x40/4e6ef2/ffffff?text=A'
+            });
+        }
+    }
+
+    // 更新助手信息显示
+    updateAssistantInfo(assistantData) {
+        console.log(this.assistantName);
+        console.log(assistantData);
+
+        // 存储当前助手信息
+        this.currentAssistant = assistantData;
+        if (this.assistantName) {
+            this.assistantName.textContent = assistantData.assistantName || '智能助手';
+        }
+
+        if (this.assistantAvatar) {
+            this.assistantAvatar.src = `${CONFIG.API_BASE_URL}${assistantData.avatar}` || 'https://via.placeholder.com/40x40/4e6ef2/ffffff?text=A';
+            this.assistantAvatar.alt = `${assistantData.assistantName || '智能助手'}头像`;
+        }
+
+        if (this.assistantDescription) {
+            this.assistantDescription.textContent = assistantData.description || '您的智能AI助手';
+        }
+    }
+
+    // 切换助手
+    async switchAssistant() {
+        try {
+            // 显示助手列表模态框
+            this.showAssistantListModal();
+        } catch (error) {
+            console.error('切换助手失败:', error);
+            alert('切换助手失败，请稍后重试');
+        }
+    }
+
+    // 显示助手列表模态框
+    showAssistantListModal() {
+        const modal = document.getElementById('assistantListModal');
+        const closeBtn = modal.querySelector('.close');
+        const modalContent = modal.querySelector('.modal-content');
+
+        // 显示模态框
+        modal.style.display = 'block';
+
+        // 获取助手列表
+        this.getAssistantList();
+
+        // 关闭按钮事件
+        closeBtn.onclick = () => {
+            modal.style.display = 'none';
+        };
+
+        // 点击模态框外部关闭
+        window.onclick = (event) => {
+            if (event.target === modal) {
+                modal.style.display = 'none';
+            }
+        };
+    }
+
+    // 获取助手列表
+    async getAssistantList() {
+        try {
+            const response = await fetch(`${CONFIG.API_BASE_URL}/assistant/all`);
+            if (!response.ok) {
+                throw new Error(`HTTP error! status: ${response.status}`);
+            }
+
+            const result = await response.json();
+            this.renderAssistantList(result.data);
+        } catch (error) {
+            console.error('获取助手列表失败:', error);
+            alert('获取助手列表失败，请稍后重试');
+        }
+    }
+
+    // 渲染助手列表
+    renderAssistantList(assistants) {
+        const assistantListContainer = document.getElementById('assistantList');
+        assistantListContainer.innerHTML = '';
+
+        assistants.forEach(assistant => {
+            const assistantItem = document.createElement('div');
+            assistantItem.className = 'assistant-item';
+            assistantItem.innerHTML = `
+                <img class="assistant-item-avatar" src="${CONFIG.API_BASE_URL}${assistant.avatar}" alt="${assistant.assistantName}">
+                <div class="assistant-item-info">
+                    <div class="assistant-item-name">${assistant.assistantName}</div>
+                    <div class="assistant-item-description">${assistant.description || ''}</div>
+                </div>
+            `;
+
+            assistantItem.addEventListener('click', () => {
+                this.selectAssistant(assistant);
+            });
+
+            assistantListContainer.appendChild(assistantItem);
+        });
+    }
+
+    // 选择助手
+    async selectAssistant(assistant) {
+        try {
+            // 关闭模态框
+            document.getElementById('assistantListModal').style.display = 'none';
+
+            // 调用API切换助手
+            const response = await fetch(`${CONFIG.API_BASE_URL}/assistant/exchange`, {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({
+                    assistantName: assistant.assistantName
+                })
+            });
+
+            if (!response.ok) {
+                throw new Error(`HTTP error! status: ${response.status}`);
+            }
+
+            // 更新当前助手信息
+            this.updateAssistantInfo(assistant);
+        } catch (error) {
+            console.error('切换助手失败:', error);
+            alert('切换助手失败，请稍后重试');
+        }
     }
 
     sendMessage() {
@@ -132,9 +295,39 @@ class ChatApp {
     }
 
     displayMessage(message, sender) {
-        const messageElement = document.createElement('div');
-        messageElement.classList.add('message');
-        messageElement.classList.add(sender === 'user' ? 'user-message' : 'system-message');
+        // 创建消息容器
+        const messageContainer = document.createElement('div');
+        messageContainer.classList.add('message-container');
+        messageContainer.classList.add(sender === 'user' ? 'user-message-container' : 'assistant-message-container');
+
+        // 获取用户或助手头像
+        let avatarSrc = '';
+        if (sender === 'user' && typeof window.userManager !== 'undefined' && window.userManager.getCurrentUser()) {
+            avatarSrc = window.userManager.getCurrentUser().avatar;
+        } else if (sender === 'system' && this.currentAssistant && this.currentAssistant.avatar) {
+            // 使用当前助手的头像
+            avatarSrc = this.currentAssistant.avatar.startsWith('http') ?
+                this.currentAssistant.avatar :
+                `${CONFIG.API_BASE_URL}${this.currentAssistant.avatar}`;
+        } else if (sender === 'system' && this.assistantAvatar) {
+            avatarSrc = this.assistantAvatar.src;
+        } else {
+            // 默认头像
+            avatarSrc = sender === 'user' ?
+                'https://via.placeholder.com/40x40/4e6ef2/ffffff?text=U' :
+                'https://via.placeholder.com/40x40/4e6ef2/ffffff?text=A';
+        }
+
+        // 创建头像元素
+        const avatarElement = document.createElement('img');
+        avatarElement.classList.add('message-avatar');
+        avatarElement.src = avatarSrc;
+        avatarElement.alt = sender === 'user' ? '用户头像' : '助手头像';
+
+        // 创建消息气泡元素
+        const messageBubble = document.createElement('div');
+        messageBubble.classList.add('message');
+        messageBubble.classList.add(sender === 'user' ? 'user-message' : 'system-message');
 
         // 检查是否为语音消息
         if (message instanceof Blob) {
@@ -142,17 +335,26 @@ class ChatApp {
             const audioElement = document.createElement('audio');
             audioElement.controls = true;
             audioElement.src = URL.createObjectURL(message);
-            messageElement.appendChild(audioElement);
+            messageBubble.appendChild(audioElement);
         } else {
             // 使用marked.js解析markdown
             if (typeof marked !== 'undefined') {
-                messageElement.innerHTML = marked.parse(message);
+                messageBubble.innerHTML = marked.parse(message);
             } else {
-                messageElement.textContent = message;
+                messageBubble.textContent = message;
             }
         }
 
-        this.chatMessages.appendChild(messageElement);
+        // 根据发送者类型安排头像和消息的顺序
+        if (sender === 'user') {
+            messageContainer.appendChild(avatarElement);
+            messageContainer.appendChild(messageBubble);
+        } else {
+            messageContainer.appendChild(avatarElement);
+            messageContainer.appendChild(messageBubble);
+        }
+
+        this.chatMessages.appendChild(messageContainer);
 
         // 滚动到底部
         this.scrollToBottom();
@@ -188,8 +390,22 @@ class ChatApp {
             // 显示正在输入指示器
             this.showTypingIndicator();
 
+            // 使用当前助手的chatApi字段，如果不存在则使用默认路径
+            let voiceChatApiPath = '/voice-chat';
+            if (this.currentAssistant && this.currentAssistant.chatApi) {
+                // 假设语音聊天API路径是在chatApi基础上添加/voice后缀
+                voiceChatApiPath = this.currentAssistant.chatApi;
+            }
+
+            // 构建完整的API URL
+            let apiUrl;
+
+            // 如果chatApi是相对路径
+            apiUrl = `${CONFIG.API_BASE_URL}${voiceChatApiPath}`;
+
+
             // 使用流式响应处理语音回复
-            const response = await fetch(`${CONFIG.API_BASE_URL}/voice-chat`, {
+            const response = await fetch(apiUrl, {
                 method: 'POST',
                 body: formData
             });
@@ -228,10 +444,38 @@ class ChatApp {
             const reader = response.body.getReader();
             const decoder = new TextDecoder('utf-8');
 
+            // 创建消息容器
+            const messageContainer = document.createElement('div');
+            messageContainer.classList.add('message-container', 'assistant-message-container');
+
+            // 获取助手头像
+            let avatarSrc = '';
+            if (this.currentAssistant && this.currentAssistant.avatar) {
+                // 使用当前助手的头像
+                avatarSrc = this.currentAssistant.avatar.startsWith('http') ?
+                    this.currentAssistant.avatar :
+                    `${CONFIG.API_BASE_URL}${this.currentAssistant.avatar}`;
+            } else if (this.assistantAvatar) {
+                avatarSrc = this.assistantAvatar.src;
+            } else {
+                // 默认头像
+                avatarSrc = 'https://via.placeholder.com/40x40/4e6ef2/ffffff?text=A';
+            }
+
+            // 创建头像元素
+            const avatarElement = document.createElement('img');
+            avatarElement.classList.add('message-avatar');
+            avatarElement.src = avatarSrc;
+            avatarElement.alt = '助手头像';
+
             // 创建系统消息元素
             const systemMessageElement = document.createElement('div');
             systemMessageElement.classList.add('message', 'system-message');
-            this.chatMessages.appendChild(systemMessageElement);
+
+            // 将头像和消息元素添加到容器中
+            messageContainer.appendChild(avatarElement);
+            messageContainer.appendChild(systemMessageElement);
+            this.chatMessages.appendChild(messageContainer);
 
             let accumulatedText = '';
 
@@ -286,8 +530,23 @@ class ChatApp {
 
     async callAPI(message) {
         try {
-            // 使用配置文件中的API基础URL
-            const response = await fetch(`${CONFIG.API_BASE_URL}/chat-stream?userMessage=${encodeURIComponent(message)}`, {
+            // 使用当前助手的chatApi字段，如果不存在则使用默认路径
+            let chatApiPath = '/chat-stream';
+            if (this.currentAssistant && this.currentAssistant.chatApi) {
+                chatApiPath = this.currentAssistant.chatApi;
+            }
+
+            // 构建完整的API URL
+            let apiUrl;
+            if (chatApiPath.startsWith('http')) {
+                // 如果chatApi是完整URL
+                apiUrl = `${chatApiPath}?userMessage=${encodeURIComponent(message)}`;
+            } else {
+                // 如果chatApi是相对路径
+                apiUrl = `${CONFIG.API_BASE_URL}${chatApiPath}?userMessage=${encodeURIComponent(message)}`;
+            }
+
+            const response = await fetch(apiUrl, {
                 method: 'GET',
                 headers: {
                     'Content-Type': 'application/json',
@@ -303,9 +562,28 @@ class ChatApp {
             const decoder = new TextDecoder('utf-8');
 
             // 创建系统消息元素
+            // 1. 获取助手头像
+            let avatarSrc = this.currentAssistant.avatar.startsWith('http') ?
+                this.currentAssistant.avatar :
+                `${CONFIG.API_BASE_URL}${this.currentAssistant.avatar}`;
+            console.log(avatarSrc);
             const systemMessageElement = document.createElement('div');
+            const avatarElement = document.createElement('img');
+            avatarElement.src = avatarSrc;
+            avatarElement.alt = '助手头像';
+            avatarElement.classList.add('message-avatar');
             systemMessageElement.classList.add('message', 'system-message');
-            this.chatMessages.appendChild(systemMessageElement);
+
+
+
+            // 创建消息容器
+            const messageContainer = document.createElement('div');
+            messageContainer.classList.add('message-container', 'assistant-message-container');
+            
+            // 将头像和消息元素添加到容器中
+            messageContainer.appendChild(avatarElement);
+            messageContainer.appendChild(systemMessageElement);
+            this.chatMessages.appendChild(messageContainer);
 
             let accumulatedText = '';
 

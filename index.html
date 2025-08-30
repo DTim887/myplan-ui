@@ -97,6 +97,19 @@
         <!-- 中间聊天窗口 -->
         <div class="center-panel">
             <div class="chat-container">
+                <!-- 当前助手信息显示区域 -->
+                <div class="assistant-info-bar">
+                    <div class="assistant-avatar">
+                        <img id="assistantAvatar" src="https://via.placeholder.com/40x40/4e6ef2/ffffff?text=A" alt="助手头像">
+                    </div>
+                    <div class="assistant-details">
+                        <div class="assistant-name" id="assistantName">智能助手</div>
+                        <div class="assistant-description" id="assistantDescription">您的智能AI助手</div>
+                    </div>
+                    <div class="switch-assistant-container">
+                        <button id="switchAssistantBtn" class="switch-assistant-btn">切换助手</button>
+                    </div>
+                </div>
                 <div class="chat-messages" id="chatMessages">
                     <!-- 消息将在这里显示 -->
                 </div>
@@ -117,6 +130,21 @@
             </div>
             <iframe src="about:blank" name="browser-frame" class="browser-frame" frameborder="0">
             </iframe>
+        </div>
+    </div>
+
+    <!-- 助手列表模态框 -->
+    <div id="assistantListModal" class="modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3>选择助手</h3>
+                <span class="close">&times;</span>
+            </div>
+            <div class="modal-body">
+                <div class="assistant-list" id="assistantList">
+                    <!-- 助手列表将通过JavaScript动态生成 -->
+                </div>
+            </div>
         </div>
     </div>
 
