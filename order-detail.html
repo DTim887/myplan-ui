@@ -1,0 +1,193 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>订单详情</title>
+    <link rel="stylesheet" href="style.css">
+    <script src="config.js"></script>
+</head>
+
+<body>
+    <div class="order-detail-container">
+        <h2>订单详情</h2>
+        <div class="order-detail-content" id="orderDetailContent">
+            <!-- 订单详情将通过JavaScript动态生成 -->
+            <p>正在加载订单详情...</p>
+        </div>
+    </div>
+
+    <script>
+        // 获取URL参数
+        function getUrlParameter(name) {
+            name = name.replace(/[\[]/, '\\[').replace(/[\]]/, '\\]');
+            var regex = new RegExp('[\\?&]' + name + '=([^&#]*)');
+            var results = regex.exec(window.location.search);
+            return results === null ? '' : decodeURIComponent(results[1].replace(/\+/g, ' '));
+        }
+
+        // 获取订单详情
+        async function fetchOrderDetail() {
+            const orderId = getUrlParameter('orderId');
+            if (!orderId) {
+                document.getElementById('orderDetailContent').innerHTML = '<p>无效的订单ID</p>';
+                return;
+            }
+
+            try {
+                const response = await fetch(`${CONFIG.API_BASE_URL}/order/detail/${orderId}`);
+                if (!response.ok) {
+                    throw new Error(`HTTP error! status: ${response.status}`);
+                }
+
+                const result = await response.json();
+                renderOrderDetail(result.data);
+            } catch (error) {
+                console.error('获取订单详情失败:', error);
+                document.getElementById('orderDetailContent').innerHTML = '<p>获取订单详情失败</p>';
+            }
+        }
+
+        // 渲染订单详情
+        function renderOrderDetail(order) {
+            const content = document.getElementById('orderDetailContent');
+            
+            if (!order) {
+                content.innerHTML = '<p>未找到订单详情</p>';
+                return;
+            }
+
+            // 直接使用API返回的产品信息（API已提供完整信息）
+            const purchasedProducts = order.purchasedProductVOs || [];
+            
+            content.innerHTML = `
+                <div class="order-info">
+                    <h3>订单信息</h3>
+                    <div class="info-item">
+                        <span class="label">订单号:</span>
+                        <span class="value">${order.id || ''}</span>
+                    </div>
+                    <div class="info-item">
+                        <span class="label">订单状态:</span>
+                        <span class="value">${order.status || ''}</span>
+                    </div>
+                    <div class="info-item">
+                        <span class="label">游玩日期:</span>
+                        <span class="value">${order.visitDate || ''}</span>
+                    </div>
+                    <div class="info-item">
+                        <span class="label">总金额:</span>
+                        <span class="value">¥${order.totalPrice || 0}</span>
+                    </div>
+                </div>
+                
+                <div class="product-info">
+                    <h3>商品信息</h3>
+                    <div class="product-list">
+                        ${purchasedProducts.map(product => `
+                            <div class="product-item">
+                                <div class="product-name">${product.productName || '未知产品'}</div>
+                                <div class="product-price">¥${product.price || 0}</div>
+                                <div class="product-quantity">数量: ${product.quantity || 0}</div>
+                            </div>
+                        `).join('')}
+                    </div>
+                </div>
+            `;
+        }
+
+        
+        // 页面加载完成后获取订单详情
+        document.addEventListener('DOMContentLoaded', () => {
+            fetchOrderDetail();
+        });
+    </script>
+
+    <style>
+        .order-detail-container {
+            padding: 20px;
+            background-color: #2d2d44;
+            border-radius: 12px;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.3);
+            margin: 20px;
+        }
+
+        .order-detail-container h2 {
+            color: #4e6ef2;
+            margin-bottom: 20px;
+            text-align: center;
+        }
+
+        .order-info,
+        .product-info {
+            background-color: #252536;
+            border-radius: 8px;
+            padding: 20px;
+            margin-bottom: 20px;
+        }
+
+        .order-info h3,
+        .product-info h3 {
+            color: #4e6ef2;
+            margin-bottom: 15px;
+            border-bottom: 1px solid #3a3a5a;
+            padding-bottom: 10px;
+        }
+
+        .info-item {
+            display: flex;
+            justify-content: space-between;
+            padding: 10px 0;
+            border-bottom: 1px solid #3a3a5a;
+        }
+
+        .info-item:last-child {
+            border-bottom: none;
+        }
+
+        .label {
+            color: #a0a0c0;
+            font-weight: bold;
+        }
+
+        .value {
+            color: #e0e0e0;
+        }
+
+        .product-list {
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+        }
+
+        .product-item {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 10px;
+            background-color: #3a3a5a;
+            border-radius: 6px;
+        }
+
+        .product-name {
+            flex: 2;
+            color: #e0e0e0;
+        }
+
+        .product-price {
+            flex: 1;
+            color: #4e6ef2;
+            font-weight: bold;
+            text-align: center;
+        }
+
+        .product-quantity {
+            flex: 1;
+            color: #a0a0c0;
+            text-align: right;
+        }
+    </style>
+</body>
+
+</html>

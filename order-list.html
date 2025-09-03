@@ -1,0 +1,144 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>订单列表</title>
+    <link rel="stylesheet" href="style.css">
+    <script src="config.js"></script>
+</head>
+
+<body>
+    <div class="order-list-container">
+        <h2>我的订单</h2>
+        <div class="order-list-content">
+            <table class="order-table">
+                <thead>
+                    <tr>
+                        <th>订单号</th>
+                        <th>订单状态</th>
+                        <th>操作</th>
+                    </tr>
+                </thead>
+                <tbody id="orderTableBody">
+                    <!-- 订单数据将通过JavaScript动态生成 -->
+                </tbody>
+            </table>
+        </div>
+    </div>
+
+    <script>
+        // 获取URL参数
+        function getUrlParameter(name) {
+            name = name.replace(/[\[]/, '\\[').replace(/[\]]/, '\\]');
+            var regex = new RegExp('[\\?&]' + name + '=([^&#]*)');
+            var results = regex.exec(window.location.search);
+            return results === null ? '' : decodeURIComponent(results[1].replace(/\+/g, ' '));
+        }
+
+        // 获取订单列表
+        async function fetchOrderList() {
+            const userId = getUrlParameter('userId');
+            if (!userId) {
+                console.error('未提供用户ID');
+                return;
+            }
+
+            try {
+                const response = await fetch(`${CONFIG.API_BASE_URL}/order/list?userId=${userId}`);
+                if (!response.ok) {
+                    throw new Error(`HTTP error! status: ${response.status}`);
+                }
+
+                const result = await response.json();
+                renderOrderList(result.data);
+            } catch (error) {
+                console.error('获取订单列表失败:', error);
+                document.getElementById('orderTableBody').innerHTML = '<tr><td colspan="3">获取订单列表失败</td></tr>';
+            }
+        }
+
+        // 渲染订单列表
+        function renderOrderList(orders) {
+            const tableBody = document.getElementById('orderTableBody');
+            tableBody.innerHTML = '';
+
+            if (!orders || orders.length === 0) {
+                tableBody.innerHTML = '<tr><td colspan="3">暂无订单</td></tr>';
+                return;
+            }
+
+            orders.forEach(order => {
+                const row = document.createElement('tr');
+                row.innerHTML = `
+                    <td>${order.id || ''}</td>
+                    <td>${order.status || ''}</td>
+                    <td><a href="order-detail.html?orderId=${order.id}" target="_self">查看详情</a></td>
+                `;
+                tableBody.appendChild(row);
+            });
+        }
+
+        // 页面加载完成后获取订单列表
+        document.addEventListener('DOMContentLoaded', () => {
+            fetchOrderList();
+        });
+    </script>
+
+    <style>
+        .order-list-container {
+            padding: 20px;
+            background-color: #2d2d44;
+            border-radius: 12px;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.3);
+            margin: 20px;
+        }
+
+        .order-list-container h2 {
+            color: #4e6ef2;
+            margin-bottom: 20px;
+            text-align: center;
+        }
+
+        .order-table {
+            width: 100%;
+            border-collapse: collapse;
+            background-color: #252536;
+            border-radius: 8px;
+            overflow: hidden;
+        }
+
+        .order-table th,
+        .order-table td {
+            padding: 12px 15px;
+            text-align: left;
+            border-bottom: 1px solid #3a3a5a;
+        }
+
+        .order-table th {
+            background-color: #3a3a5a;
+            color: #e0e0e0;
+            font-weight: bold;
+        }
+
+        .order-table tr:last-child td {
+            border-bottom: none;
+        }
+
+        .order-table tr:hover {
+            background-color: #3a3a5a;
+        }
+
+        .order-table a {
+            color: #4e6ef2;
+            text-decoration: none;
+        }
+
+        .order-table a:hover {
+            text-decoration: underline;
+        }
+    </style>
+</body>
+
+</html>

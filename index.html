@@ -4,7 +4,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>智能助手</title>
+    <title>智能旅游助手</title>
     <link rel="stylesheet" href="style.css">
     <!-- 引入marked.js用于markdown解析 -->
     <script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
@@ -67,26 +67,20 @@
                 </div>
             </div>
 
-            <div class="user-orders">
-                <h3>我的订单</h3>
-                <ul class="order-list">
-                    <li class="order-item">
-                        <div class="order-title">产品A</div>
-                        <div class="order-status">已完成</div>
-                    </li>
-                    <li class="order-item">
-                        <div class="order-title">产品B</div>
-                        <div class="order-status">处理中</div>
-                    </li>
-                    <li class="order-item">
-                        <div class="order-title">产品C</div>
-                        <div class="order-status">待付款</div>
-                    </li>
-                </ul>
+            <div class="user-info-section">
+                <h3>我的信息</h3>
+                <div class="info-item">
+                    <span class="info-label">我的订单:</span>
+                    <span class="info-value" id="orderCount" style="cursor: pointer; text-decoration: underline;">0</span>
+                </div>
+                <div class="info-item">
+                    <span class="info-label">我的行程:</span>
+                    <span class="info-value">0</span>
+                </div>
             </div>
 
-            <div class="user-links">
-                <h3>快速链接</h3>
+            <div class="quick-navigation">
+                <h3>快速导航</h3>
                 <ul class="links-list">
                     <li><a href="attractions.html" target="browser-frame">景点列表</a></li>
                     <li><a href="products.html" target="browser-frame">产品列表</a></li>

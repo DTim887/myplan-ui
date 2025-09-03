@@ -57,6 +57,14 @@ class UserManager {
                 this.closeAllModals();
             });
         }
+
+        // 订单点击事件
+        const orderCount = document.getElementById('orderCount');
+        if (orderCount) {
+            orderCount.addEventListener('click', () => {
+                this.openOrderList();
+            });
+        }
     }
 
     // 从后端获取当前用户信息
@@ -297,6 +305,19 @@ class UserManager {
     // 获取当前用户信息
     getCurrentUser() {
         return this.currentUser;
+    }
+
+    // 打开订单列表
+    openOrderList() {
+        if (this.currentUser && this.currentUser.id) {
+            const browserFrame = document.querySelector('.browser-frame');
+            if (browserFrame) {
+                browserFrame.src = `order-list.html?userId=${this.currentUser.id}`;
+            }
+        } else {
+            console.error('无法获取当前用户信息');
+            alert('请先登录后再查看订单列表');
+        }
     }
 }
 
